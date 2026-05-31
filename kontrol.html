@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Robot BLE</title>
+</head>
+
+<body style="text-align:center; font-family:Arial;">
+
+<h1>Robot Control</h1>
+
+<button onclick="connectBLE()">
+CONNECT BLE
+</button>
+
+<br><br>
+
+<button onclick="sendData('W')">MAJU</button>
+
+<br><br>
+
+<button onclick="sendData('A')">KIRI</button>
+
+<button onclick="sendData('D')">KANAN</button>
+
+<br><br>
+
+<button onclick="sendData('S')">MUNDUR</button>
+
+<br><br><br>
+
+<h2>Servo 1</h2>
+
+<input
+type="range"
+min="0"
+max="180"
+value="90"
+id="slider1"
+>
+
+<p id="value1">90</p>
+
+<br><br>
+
+<h2>Servo 2</h2>
+
+<input
+type="range"
+min="0"
+max="180"
+value="90"
+id="slider2"
+>
+
+<p id="value2">90</p>
+
+<script>
+
+let characteristic;
+
+// UUID
+const serviceUUID =
+"12345678-1234-1234-1234-1234567890ab";
+
+const characteristicUUID =
+"abcdefab-1234-5678-1234-abcdefabcdef";
+
+// =========================
+// CONNECT BLE
+// =========================
+
+async function connectBLE(){
+
+  try{
+
+    const device =
+    await navigator.bluetooth.requestDevice({
+
+      acceptAllDevices: true,
+
+      optionalServices: [serviceUUID]
+
+    });
+
+    const server =
+    await device.gatt.connect();
+
+    const service =
+    await server.getPrimaryService(serviceUUID);
+
+    characteristic =
+    await service.getCharacteristic(characteristicUUID);
+
+    alert("BLE Connected");
+
+  }catch(error){
+
+    console.log(error);
+
+    alert(error);
+
+  }
+}
+
+// =========================
+// SEND DATA
+// =========================
+
+async function sendData(data){
+
+  if(!characteristic){
+    alert("Belum connect BLE");
+    return;
+  }
+
+  const encoder = new TextEncoder();
+
+  await characteristic.writeValue(
+    encoder.encode(data)
+  );
+
+  console.log(data);
+}
+
+// =========================
+// SLIDER SERVO 1
+// =========================
+
+const slider1 =
+document.getElementById("slider1");
+
+slider1.addEventListener("input", function(){
+
+  document.getElementById("value1").innerHTML =
+  slider1.value;
+
+  sendData("V" + slider1.value);
+
+});
+
+// =========================
+// SLIDER SERVO 2
+// =========================
+
+const slider2 =
+document.getElementById("slider2");
+
+slider2.addEventListener("input", function(){
+
+  document.getElementById("value2").innerHTML =
+  slider2.value;
+
+  sendData("U" + slider2.value);
+
+});
+
+</script>
+
+</body>
+</html>
