@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>JOHNSON ROBOT</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#0f172a;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+
+.card{
+    background:#1e293b;
+    border-radius:20px;
+    padding:20px;
+    margin:15px auto;
+    max-width:500px;
+    box-shadow:0 0 20px rgba(0,0,0,.3);
+}
+
+h1{
+    margin-bottom:10px;
+}
+
+.status{
+    margin-top:10px;
+    font-size:14px;
+    color:#94a3b8;
+}
+
+button{
+    border:none;
+    border-radius:15px;
+    cursor:pointer;
+}
+
+.connect{
+    width:220px;
+    height:55px;
+    font-size:18px;
+    background:#2563eb;
+    color:white;
+}
+
+.mode{
+    width:140px;
+    height:50px;
+    margin:8px;
+    font-size:16px;
+    color:white;
+}
+
+.auto{
+    background:#16a34a;
+}
+
+.manual{
+    background:#dc2626;
+}
+
+.pad{
+    margin-top:20px;
+}
+
+.arrow{
+    width:90px;
+    height:90px;
+    font-size:30px;
+    background:#334155;
+    color:white;
+}
+
+.middle{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin:15px 0;
+}
+
+.slider{
+    width:100%;
+}
+
+.value{
+    margin-top:10px;
+    font-size:18px;
+    color:#38bdf8;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>🤖 JOHNSON ROBOT</h1>
+
+<button class="connect" onclick="connectBLE()">
+CONNECT BLE
+</button>
+
+<div class="status" id="status">
+Disconnected
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>MODE</h2>
+
+<button class="mode auto"
+onclick="sendData('P')">
+AUTO PID
+</button>
+
+<button class="mode manual"
+onclick="sendData('M')">
+MANUAL
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>CONTROL</h2>
+
+<div>
+<button class="arrow"
+onpointerdown="sendData('W')"
+onpointerup="sendData('X')">
+⬆
+</button>
+</div>
+
+<div class="middle">
+
+<button class="arrow"
+onpointerdown="sendData('A')"
+onpointerup="sendData('X')">
+⬅
+</button>
+
+<button class="arrow"
+onpointerdown="sendData('D')"
+onpointerup="sendData('X')">
+➡
+</button>
+
+</div>
+
+<div>
+<button class="arrow"
+onpointerdown="sendData('S')"
+onpointerup="sendData('X')">
+⬇
+</button>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Servo Capit</h2>
+
+<input
+type="range"
+min="0"
+max="180"
+value="150"
+class="slider"
+id="slider1">
+
+<div class="value" id="value1">
+150°
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Servo Engsel</h2>
+
+<input
+type="range"
+min="0"
+max="180"
+value="90"
+class="slider"
+id="slider2">
+
+<div class="value" id="value2">
+90°
+</div>
+
+</div>
+
+<script>
+
+let characteristic;
+
+const serviceUUID =
+"12345678-1234-1234-1234-1234567890ab";
+
+const characteristicUUID =
+"abcdefab-1234-5678-1234-abcdefabcdef";
+
+async function connectBLE(){
+
+    try{
+
+        const device =
+        await navigator.bluetooth.requestDevice({
+            acceptAllDevices:true,
+            optionalServices:[serviceUUID]
+        });
+
+        const server =
+        await device.gatt.connect();
+
+        const service =
+        await server.getPrimaryService(serviceUUID);
+
+        characteristic =
+        await service.getCharacteristic(
+            characteristicUUID
+        );
+
+        document.getElementById("status")
+        .innerHTML = "🟢 Connected";
+
+    }
+
+    catch(err){
+
+        alert(err);
+
+    }
+}
+
+async function sendData(data){
+
+    if(!characteristic) return;
+
+    const encoder =
+    new TextEncoder();
+
+    await characteristic.writeValue(
+        encoder.encode(data)
+    );
+
+    console.log("SEND:",data);
+}
+
+// Servo 1
+
+slider1.oninput=function(){
+
+    value1.innerHTML =
+    slider1.value + "°";
+
+    sendData("V"+slider1.value);
+
+}
+
+// Servo 2
+
+slider2.oninput=function(){
+
+    value2.innerHTML =
+    slider2.value + "°";
+
+    sendData("U"+slider2.value);
+
+}
+
+</script>
+
+</body>
+</html>
