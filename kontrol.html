@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="
+width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+minimum-scale=1.0,
+user-scalable=no,
+viewport-fit=cover">
+
+<meta name="apple-mobile-web-app-capable"
+content="yes">
+
+<meta name="mobile-web-app-capable"
+content="yes">
+
+<meta name="theme-color"
+content="#000000">
+
+<title>ARFIYU GAMEPAD</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+    -webkit-tap-highlight-color:transparent;
+    user-select:none;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    touch-action:manipulation;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+    color:white;
+    -webkit-touch-callout:none;
+    overscroll-behavior:none;
+}
+
+/* =========================
+TOPBAR
+========================= */
+
+.topbar{
+    position:fixed;
+    top:10px;
+    left:50%;
+    transform:translateX(-50%);
+    width:95%;
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    z-index:100;
+}
+
+.top-btn{
+    width:95px;
+    height:52px;
+    border:none;
+    border-radius:16px;
+    background:#052e2b;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    box-shadow: 0 0 20px rgba(0,255,180,.35);
+}
+
+.top-btn:active{
+    background:#0b6b56;
+}
+
+/* =========================
+SLIDER
+========================= */
+
+.slider-box{
+    position:absolute;
+    top:65px;
+    left:50%;
+    transform:translateX(-50%);
+    width:42%;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.slider-card{
+    background:#07111f;
+    padding:6px 10px;
+    border-radius:12px;
+    box-shadow: 0 0 18px rgba(0,0,0,.5);
+}
+
+.slider-title{
+    font-size:13px;
+    margin-bottom:2px;
+}
+
+.slider{
+    width:100%;
+}
+
+.value{
+    margin-top:2px;
+    color:#38bdf8;
+    font-size:13px;
+}
+
+/* =========================
+GAMEPAD
+========================= */
+
+.gamepad{
+    position:fixed;
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    background: radial-gradient(circle, #000 45%, #00ffb3 100%);
+    box-shadow: 0 0 55px rgba(0,255,180,.4);
+    z-index:50;
+}
+
+/* LEFT */
+
+.left-pad{
+    left:12px;
+    bottom:12px;
+}
+
+/* RIGHT */
+
+.right-pad{
+    right:12px;
+    bottom:12px;
+}
+
+/* =========================
+GARIS
+========================= */
+
+.diagonal{
+    position:absolute;
+    width:3px;
+    height:100%;
+    background:rgba(255,255,255,.2);
+    left:50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+/* =========================
+BUTTON
+========================= */
+
+.move-btn{
+    position:absolute;
+    width:90px;
+    height:90px;
+    border:none;
+    border-radius:50%;
+    background:#000;
+    color:white;
+    font-size:34px;
+    box-shadow: 0 0 30px rgba(0,255,180,.35);
+}
+
+.move-btn:active{
+    background:#111;
+    box-shadow: 0 0 50px rgba(0,255,180,.9);
+}
+
+/* =========================
+POSISI
+========================= */
+
+.up{
+    top:10px;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.down{
+    bottom:10px;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.left{
+    left:10px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+.right{
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+/* =========================
+PORTRAIT WARNING
+========================= */
+
+.rotate-warning{
+    position:fixed;
+    inset:0;
+    background:#000;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    font-size:24px;
+    z-index:9999;
+    padding:30px;
+}
+
+@media screen and (orientation:portrait){
+    .rotate-warning{
+        display:flex;
+    }
+    .main-ui{
+        display:none;
+    }
+}
+
+/* =========================
+HP KECIL
+========================= */
+
+@media (max-height:500px){
+    .gamepad{
+        width:190px;
+        height:190px;
+    }
+    .move-btn{
+        width:78px;
+        height:78px;
+        font-size:28px;
+    }
+    .slider-box{
+        width:40%;
+        top:55px;
+    }
+    .slider-card{
+        padding:4px 8px;
+    }
+    .slider-title{
+        font-size:11px;
+        margin-bottom:0px;
+    }
+    .value{
+        font-size:11px;
+        margin-top:0px;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="rotate-warning">
+
+Putar HP ke Landscape
+
+</div>
+
+<div class="main-ui">
+
+<div class="topbar">
+
+<button class="top-btn"
+onclick="connectBLE()">
+BLE
+</button>
+
+<button class="top-btn"
+onclick="sendData('P')">
+PID
+</button>
+
+<button class="top-btn"
+onclick="sendData('M')">
+MAN
+</button>
+
+</div>
+
+<div class="gamepad left-pad">
+
+<div class="diagonal"></div>
+
+<button class="move-btn up"
+onpointerdown="startSend('W')"
+onpointerup="stopSend()"
+onpointerleave="stopSend()">
+▲
+</button>
+
+<button class="move-btn down"
+onpointerdown="startSend('S')"
+onpointerup="stopSend()"
+onpointerleave="stopSend()">
+▼
+</button>
+
+</div>
+
+<div class="gamepad right-pad">
+
+<div class="diagonal"></div>
+
+<button class="move-btn left"
+onpointerdown="startSend('A')"
+onpointerup="stopSend()"
+onpointerleave="stopSend()">
+◀
+</button>
+
+<button class="move-btn right"
+onpointerdown="startSend('D')"
+onpointerup="stopSend()"
+onpointerleave="stopSend()">
+▶
+</button>
+
+</div>
+
+<div class="slider-box">
+
+<div class="slider-card">
+<div class="slider-title">Servo Capit</div>
+<input type="range" min="0" max="180" value="150" class="slider" id="slider1">
+<div class="value" id="value1">150°</div>
+</div>
+
+<div class="slider-card">
+<div class="slider-title">Servo Engsel</div>
+<input type="range" min="0" max="180" value="90" class="slider" id="slider2">
+<div class="value" id="value2">90°</div>
+</div>
+
+<div class="slider-card">
+<div class="slider-title">PWM Manual</div>
+<input type="range" min="0" max="255" value="210" class="slider" id="sliderPWM">
+<div class="value" id="valuePWM">210</div>
+</div>
+
+<div class="slider-card">
+<div class="slider-title">PID Dasar</div>
+<input type="range" min="0" max="255" value="200" class="slider" id="sliderBase">
+<div class="value" id="valueBase">200</div>
+</div>
+
+<div class="slider-card">
+<div class="slider-title">PID Max</div>
+<input type="range" min="0" max="255" value="220" class="slider" id="sliderMax">
+<div class="value" id="valueMax">220</div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* =========================
+ANTI ZOOM
+========================= */
+
+document.addEventListener('gesturestart', function(e){
+    e.preventDefault();
+});
+
+let lastTouchEnd = 0;
+
+document.addEventListener('touchend', function(event){
+    let now = (new Date()).getTime();
+    if(now - lastTouchEnd <= 300){
+        event.preventDefault();
+    }
+    lastTouchEnd = now;
+}, {passive:false});
+
+/* =========================
+ANTI COPY
+========================= */
+
+document.addEventListener("contextmenu", function(e){
+    e.preventDefault();
+});
+
+document.addEventListener("selectstart", function(e){
+    e.preventDefault();
+});
+
+document.addEventListener("dragstart", function(e){
+    e.preventDefault();
+});
+
+/* =========================
+FORCE LANDSCAPE
+========================= */
+
+if(screen.orientation){
+    screen.orientation.lock("landscape").catch(()=>{});
+}
+
+/* =========================
+BLE
+========================= */
+
+let characteristic;
+
+const serviceUUID = "12345678-1234-1234-1234-1234567890ab";
+const characteristicUUID = "abcdefab-1234-5678-1234-abcdefabcdef";
+
+/* =========================
+CONNECT BLE
+========================= */
+
+async function connectBLE(){
+    try{
+        const device = await navigator.bluetooth.requestDevice({
+            acceptAllDevices:true,
+            optionalServices:[serviceUUID]
+        });
+
+        const server = await device.gatt.connect();
+        const service = await server.getPrimaryService(serviceUUID);
+        characteristic = await service.getCharacteristic(characteristicUUID);
+
+        alert("BLE CONNECTED");
+    }
+    catch(err){
+        alert(err);
+    }
+}
+
+/* =========================
+SEND DATA
+========================= */
+
+async function sendData(data){
+    if(!characteristic) return;
+    try{
+        await characteristic.writeValueWithoutResponse(
+            new TextEncoder().encode(data)
+        );
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+/* =========================
+HOLD CONTROL
+========================= */
+
+let controlInterval = null;
+
+function startSend(cmd){
+    stopSend();
+    sendData(cmd);
+    controlInterval = setInterval(()=>{
+        sendData(cmd);
+    },30);
+}
+
+function stopSend(){
+    if(controlInterval){
+        clearInterval(controlInterval);
+        controlInterval = null;
+    }
+    sendData("X");
+}
+
+/* =========================
+SERVO 1
+========================= */
+
+slider1.oninput = ()=>{
+    value1.innerHTML = slider1.value + "°";
+    sendData("V" + slider1.value);
+};
+
+/* =========================
+SERVO 2
+========================= */
+
+slider2.oninput = ()=>{
+    value2.innerHTML = slider2.value + "°";
+    sendData("U" + slider2.value);
+};
+
+/* =========================
+PWM MANUAL
+========================= */
+
+sliderPWM.oninput = ()=>{
+    valuePWM.innerHTML = sliderPWM.value;
+    sendData("K" + sliderPWM.value);
+};
+
+/* =========================
+PID BASE
+========================= */
+
+sliderBase.oninput = ()=>{
+    valueBase.innerHTML = sliderBase.value;
+    sendData("B" + sliderBase.value);
+};
+
+/* =========================
+PID MAX
+========================= */
+
+sliderMax.oninput = ()=>{
+    valueMax.innerHTML = sliderMax.value;
+    sendData("L" + sliderMax.value);
+};
+
+</script>
+
+</body>
+</html>
