@@ -151,6 +151,18 @@ async function updateStatus() {
     }
 }
 
+function holdMove(event, direction) {
+    event.preventDefault();
+    move(direction);
+}
+
+function stopMove() {
+    move('X');
+}
+
+document.addEventListener("pointerup", stopMove);
+document.addEventListener("pointercancel", stopMove);
+
 // UPDATE DATA SETIAP 1 DETIK
 setInterval(updateStatus, 1000);
 
