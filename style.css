@@ -1,0 +1,228 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, #103c68, transparent 35%),
+        linear-gradient(135deg, #030914, #071a30, #020812);
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #eafaff;
+}
+
+.container {
+    max-width: 1250px;
+    margin: auto;
+    padding: 25px;
+}
+
+/* HEADER */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    font-size: 30px;
+    letter-spacing: 4px;
+    color: #38dfff;
+    text-shadow: 0 0 15px #00bfff;
+}
+
+header p {
+    color: #8baec9;
+    font-size: 11px;
+    letter-spacing: 3px;
+    margin-top: 5px;
+}
+
+#connection {
+    color: #ff526d;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* CONNECTION */
+
+.connect {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.connect input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px;
+    border-radius: 8px;
+    border: 1px solid #17658b;
+    background: #07172a;
+    color: white;
+    outline: none;
+}
+
+.connect button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #0788c9, #315bdf);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* DASHBOARD GRID */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+/* CARD */
+
+.card {
+    background: linear-gradient(145deg, #10243c, #071426);
+    border: 1px solid rgba(56, 223, 255, 0.3);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 0 20px rgba(0, 170, 255, 0.08);
+    transition: 0.3s;
+}
+
+.card:hover {
+    border-color: #38dfff;
+    box-shadow: 0 0 20px rgba(0, 200, 255, 0.15);
+}
+
+.card h2 {
+    font-size: 16px;
+    color: #38dfff;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+}
+
+.card h3 {
+    font-size: 13px;
+    color: #a6c8df;
+    margin: 15px 0 10px;
+}
+
+/* MOVEMENT CONTROL */
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 25px;
+}
+
+.controls div {
+    display: flex;
+    gap: 8px;
+}
+
+.controls button {
+    width: 65px;
+    height: 55px;
+    border: 1px solid #2589b5;
+    border-radius: 10px;
+    background: #0b2b49;
+    color: #38dfff;
+    font-size: 23px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.controls button:hover,
+.controls button:active {
+    background: #087caf;
+    box-shadow: 0 0 15px #00cfff;
+}
+
+.controls .stop {
+    width: 85px;
+    font-size: 13px;
+    color: #ff7189;
+    border-color: #a33d56;
+}
+
+/* SLIDERS */
+
+input[type="range"] {
+    width: 100%;
+    accent-color: #38dfff;
+    cursor: pointer;
+}
+
+.card p {
+    color: #9abbd1;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+/* TEMPERATURE */
+
+.temperature {
+    font-size: 55px;
+    font-weight: bold;
+    color: #38dfff;
+    text-shadow: 0 0 20px #00bfff;
+    margin: 20px 0 5px;
+}
+
+/* CLOCK */
+
+.clock {
+    font-size: 38px;
+    font-weight: bold;
+    color: #eafaff;
+    letter-spacing: 3px;
+    margin-top: 30px;
+    text-shadow: 0 0 15px #00bfff;
+}
+
+/* SYSTEM STATUS */
+
+.card b {
+    color: #42efae;
+}
+
+.note {
+    margin-top: 20px !important;
+    padding-top: 15px;
+    border-top: 1px solid #24435d;
+    font-size: 11px !important;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    header {
+        gap: 10px;
+    }
+
+    header h1 {
+        font-size: 23px;
+    }
+
+    .clock {
+        font-size: 30px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+}
