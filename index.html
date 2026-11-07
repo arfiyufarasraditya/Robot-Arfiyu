@@ -26,23 +26,37 @@
     <main class="dashboard">
 
         <section class="card">
-            <h2>CONTROL MOVEMENT</h2>
+    <h2>CONTROL MOVEMENT</h2>
 
-            <div class="controls">
-                <button onclick="move('W')">▲</button>
-                <div>
-                    <button onclick="move('A')">◀</button>
-                    <button class="stop" onclick="move('X')">STOP</button>
-                    <button onclick="move('D')">▶</button>
-                </div>
-                <button onclick="move('S')">▼</button>
-            </div>
+    <div class="controls">
+        <button
+            onpointerdown="holdMove(event, 'W')"
+            onpointerup="stopMove()"
+            onpointerleave="stopMove()"
+            onpointercancel="stopMove()">▲</button>
 
-            <h3>Motor Speed</h3>
-            <input type="range" min="0" max="255" value="150"
-                id="speed" oninput="setSpeed(this.value)">
-            <p id="speedValue">150 / 255</p>
-        </section>
+        <div>
+            <button
+                onpointerdown="holdMove(event, 'A')"
+                onpointerup="stopMove()"
+                onpointerleave="stopMove()"
+                onpointercancel="stopMove()">◀</button>
+
+            <button class="stop" onclick="stopMove()">STOP</button>
+
+            <button
+                onpointerdown="holdMove(event, 'D')"
+                onpointerup="stopMove()"
+                onpointerleave="stopMove()"
+                onpointercancel="stopMove()">▶</button>
+        </div>
+
+        <button
+            onpointerdown="holdMove(event, 'S')"
+            onpointerup="stopMove()"
+            onpointerleave="stopMove()"
+            onpointercancel="stopMove()">▼</button>
+</section>
 
         <section class="card">
             <h2>SERVO CONTROL</h2>
