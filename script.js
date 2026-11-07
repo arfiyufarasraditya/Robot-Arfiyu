@@ -1,4 +1,3 @@
-
 let espIP = "";
 let activeDirection = null;
 
