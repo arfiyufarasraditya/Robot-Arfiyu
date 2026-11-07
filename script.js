@@ -1,171 +1,195 @@
 
-// ======================================
-// NEON ROVER - ESP32 DASHBOARD
-// ======================================
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-let espIP = "";
+body {
+    font-family: Arial, sans-serif;
+    background: #050b18;
+    color: white;
+    min-height: 100vh;
+}
 
-// AMBIL ALAMAT ESP32
-function getAddress() {
-    espIP = document.getElementById("espIP").value.trim();
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 25px 0;
+}
 
-    if (!espIP.startsWith("http://") &&
-        !espIP.startsWith("https://")) {
-        espIP = "http://" + espIP;
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+header h1 {
+    color: #00d9ff;
+    font-size: 32px;
+    text-shadow: 0 0 15px #00d9ff;
+    letter-spacing: 3px;
+}
+
+header p {
+    color: #8ca6c9;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-top: 5px;
+}
+
+#connection {
+    color: #ff4545;
+    font-weight: bold;
+}
+
+.connect {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid #087bba;
+    background: #0b1830;
+    color: white;
+    border-radius: 8px;
+}
+
+button {
+    border: 1px solid #00d9ff;
+    background: #092849;
+    color: #00d9ff;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+button:active {
+    background: #00d9ff;
+    color: #00101e;
+    box-shadow: 0 0 20px #00d9ff;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background: linear-gradient(145deg, #101e36, #091426);
+    border: 1px solid #075b91;
+    border-radius: 15px;
+    padding: 22px;
+    box-shadow: 0 0 15px #003b6040;
+}
+
+.card h2 {
+    color: #00d9ff;
+    font-size: 18px;
+    margin-bottom: 22px;
+}
+
+.card h3 {
+    color: #b7d8ef;
+    font-size: 14px;
+    margin: 18px 0 10px;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.middle-controls {
+    display: flex;
+    gap: 15px;
+}
+
+.move-btn {
+    width: 75px;
+    height: 65px;
+    font-size: 25px;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: #00d9ff;
+    cursor: pointer;
+}
+
+.card p {
+    color: #9eb9d4;
+    margin-top: 8px;
+}
+
+.temperature {
+    font-size: 45px;
+    color: #00e5ff;
+    font-weight: bold;
+    text-shadow: 0 0 15px #00d9ff;
+}
+
+.clock {
+    font-size: 35px;
+    color: #00e5ff;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.note {
+    font-size: 12px;
+    color: #718ba9 !important;
+    margin-top: 20px !important;
+}
+
+@media (max-width: 700px) {
+
+    .container {
+        width: 92%;
+        padding: 18px 0;
     }
 
-    espIP = espIP.replace(/\/$/, "");
-    return espIP;
-}
-
-// KIRIM PERINTAH KE ESP32
-async function sendCommand(path) {
-    if (!espIP) {
-        getAddress();
+    header h1 {
+        font-size: 25px;
     }
 
-    try {
-        const response = await fetch(espIP + path);
-
-        if (!response.ok) {
-            throw new Error("HTTP " + response.status);
-        }
-
-        return await response.text();
-
-    } catch (error) {
-        console.error("Gagal mengirim perintah:", error);
-        document.getElementById("connection").textContent =
-            "● CONNECTION ERROR";
-        document.getElementById("connection").style.color =
-            "#ff526d";
-    }
-}
-
-// KONEKSI ROBOT
-async function connectRobot() {
-    getAddress();
-    await updateStatus();
-}
-
-// KONTROL MOTOR
-function move(direction) {
-    sendCommand("/api/cmd?m=" + direction);
-}
-
-// KECEPATAN MOTOR
-function setSpeed(value) {
-    document.getElementById("speedValue").textContent =
-        value + " / 255";
-
-    sendCommand("/api/speed?v=" + value);
-}
-
-// KONTROL SERVO
-function setServo(id, value) {
-    if (id === "capit") {
-        document.getElementById("capitValue").textContent =
-            value + "°";
+    .dashboard {
+        grid-template-columns: 1fr;
     }
 
-    if (id === "lift") {
-        document.getElementById("liftValue").textContent =
-            value + "°";
+    .card {
+        padding: 18px;
     }
 
-    sendCommand(
-        "/api/servo?id=" + id + "&v=" + value
-    );
-}
+    .connect {
+        flex-wrap: wrap;
+    }
 
-// MEMBACA DATA ESP32
-async function updateStatus() {
-    if (!espIP) return;
+    .connect button {
+        width: 100%;
+    }
 
-    try {
-        const response = await fetch(
-            espIP + "/api/status",
-            { cache: "no-store" }
-        );
+    .temperature {
+        font-size: 38px;
+    }
 
-        if (!response.ok) {
-            throw new Error("ESP32 tidak merespons");
-        }
-
-        const data = await response.json();
-
-        // STATUS KONEKSI
-        document.getElementById("connection").textContent =
-            "● ROBOT CONNECTED";
-
-        document.getElementById("connection").style.color =
-            "#42efae";
-
-        // SUHU OBJEK
-        document.getElementById("temperature").textContent =
-            data.temperature === null
-                ? "--.-"
-                : Number(data.temperature).toFixed(1);
-
-        // SUHU LINGKUNGAN
-        document.getElementById("ambient").textContent =
-            data.ambient === null
-                ? "--.- °C"
-                : Number(data.ambient).toFixed(1) + " °C";
-
-        // JAM DAN TANGGAL
-        if (data.time && data.time !== "RTC_ERROR") {
-            const waktu = data.time.split(" ");
-
-            document.getElementById("clock").textContent =
-                waktu[1] || "--:--:--";
-
-            document.getElementById("date").textContent =
-                waktu[0] || "Tanggal tidak tersedia";
-        }
-
-        // STATUS MOTOR
-        document.getElementById("motor").textContent =
-            data.motor;
-
-        // STATUS MICRO SD
-        document.getElementById("sd").textContent =
-            data.sd;
-
-        // STATUS SENSOR SUHU
-        document.getElementById("mlx").textContent =
-            data.mlx;
-
-        // STATUS RTC
-        document.getElementById("rtc").textContent =
-            data.rtc;
-
-    } catch (error) {
-        console.error("Status gagal dibaca:", error);
-
-        document.getElementById("connection").textContent =
-            "● DISCONNECTED";
-
-        document.getElementById("connection").style.color =
-            "#ff526d";
+    .clock {
+        font-size: 30px;
     }
 }
-
-function holdMove(event, direction) {
-    event.preventDefault();
-    move(direction);
-}
-
-function stopMove() {
-    move('X');
-}
-
-document.addEventListener("pointerup", stopMove);
-document.addEventListener("pointercancel", stopMove);
-
-// UPDATE DATA SETIAP 1 DETIK
-setInterval(updateStatus, 1000);
-
-// ======================================
-// END NEON ROVER
-// ======================================
